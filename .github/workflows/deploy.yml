@@ -1,0 +1,71 @@
+name: Deploy FastAPI to Azure Function
+
+on:
+  push:
+    branches:
+      - staging
+      - main
+
+env:
+  AZURE_RESOURCE_GROUP: rg-fastapi-${{ github.ref_name }}
+  FUNCTION_APP_NAME: fastapi-func-${{ github.ref_name }}
+  LOCATION: eastus
+  PYTHON_VERSION: "3.10"
+  PLAN_NAME: plan-fastapi-${{ github.ref_name }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Create Resource Group
+      run: |
+        az group create --name $AZURE_RESOURCE_GROUP --location $LOCATION
+
+    - name: Create Function App Plan
+      run: |
+        az functionapp plan create \
+          --name $PLAN_NAME \
+          --resource-group $AZURE_RESOURCE_GROUP \
+          --location $LOCATION \
+          --number-of-workers 1 \
+          --sku B1 \
+          --is-linux
+
+    - name: Create Function App
+      run: |
+        az functionapp create \
+          --name $FUNCTION_APP_NAME \
+          --storage-account $FUNCTION_APP_NAME \
+          --resource-group $AZURE_RESOURCE_GROUP \
+          --plan $PLAN_NAME \
+          --runtime python \
+          --runtime-version $PYTHON_VERSION \
+          --functions-version 4 \
+          --os-type Linux
+
+    - name: Set Environment Variables
+      run: |
+        az functionapp config appsettings set \
+          --name $FUNCTION_APP_NAME \
+          --resource-group $AZURE_RESOURCE_GROUP \
+          --settings ENV=${{ github.ref_name }}
+
+    - name: Deploy Code
+      uses: azure/functions-action@v1
+      with:
+        app-name: ${{ env.FUNCTION_APP_NAME }}
+        package: .
