@@ -9,7 +9,7 @@ on:
 env:
   AZURE_RESOURCE_GROUP: rg-fastapi-${{ github.ref_name }}
   FUNCTION_APP_NAME: fastapi-func-${{ github.ref_name }}
-  LOCATION: westus2
+  LOCATION: eastus
   PYTHON_VERSION: "3.10"
   PLAN_NAME: plan-fastapi-${{ github.ref_name }}
 
