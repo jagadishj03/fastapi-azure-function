@@ -1,4 +1,10 @@
-import azure.functions as func
-from api.main import app
+from azure.functions import AsgiFunctionApp
+from fastapi import FastAPI
 
-main = func.AsgiFunctionApp(app=app)
+app = FastAPI()
+
+@app.get("/")
+def read_root():
+    return {"message": "Hello from FastAPI on Azure Functions"}
+
+main = AsgiFunctionApp(app)
