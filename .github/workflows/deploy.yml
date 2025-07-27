@@ -101,6 +101,11 @@ jobs:
           --resource-group $AZURE_RESOURCE_GROUP \
           --settings ENV=${{ github.ref_name }}
 
+    - name: Install dependencies to .python_packages
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install --target=".python_packages/lib/site-packages" -r requirements.txt
+
     - name: Deploy Code to Azure Function
       uses: azure/functions-action@v1
       with:
