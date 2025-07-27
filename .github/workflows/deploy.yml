@@ -74,7 +74,7 @@ jobs:
           --runtime python \
           --runtime-version $PYTHON_VERSION \
           --functions-version 4 \
-          --os-type Linux
+          --os-type Linux \
           --consumption-plan-location $LOCATION
 
     - name: Set Environment Variables
