@@ -1,0 +1,4 @@
+fastapi
+azure-functions
+mangum
+uvicorn
