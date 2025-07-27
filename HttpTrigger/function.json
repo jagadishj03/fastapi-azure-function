@@ -1,17 +1,19 @@
 {
+  "scriptFile": "../api.py",
+  "entryPoint": "app",
   "bindings": [
     {
       "authLevel": "anonymous",
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": ["get", "post"],
+      "methods": [ "get", "post" ],
       "route": "{*route}"
     },
     {
       "type": "http",
       "direction": "out",
-      "name": "res"
+      "name": "$return"
     }
   ]
 }
