@@ -34,8 +34,8 @@ jobs:
         CLEAN_NAME=$(echo "${{ github.ref_name }}" | tr -cd '[:alnum:]' | tr '[:upper:]' '[:lower:]')
         echo "CLEAN_NAME=$CLEAN_NAME" >> $GITHUB_OUTPUT
         echo "AZURE_RESOURCE_GROUP=rg-fastapi-$CLEAN_NAME" >> $GITHUB_ENV
-        echo "FUNCTION_APP_NAME=fastapifunc$CLEAN_NAME" >> $GITHUB_ENV
-        echo "STORAGE_ACCOUNT_NAME=fastapistore$CLEAN_NAME" >> $GITHUB_ENV
+        echo "FUNCTION_APP_NAME=fastapistoreneonetapi$CLEAN_NAME" >> $GITHUB_ENV
+        echo "STORAGE_ACCOUNT_NAME=fastapistoreneonetapi$CLEAN_NAME" >> $GITHUB_ENV
 
     - name: Create Resource Group (idempotent)
       run: |
@@ -48,9 +48,9 @@ jobs:
         echo '${{ secrets.AZURE_CREDENTIALS }}' | jq -r '.subscriptionId'
     
 
-    - name: Check if AZURE_CREDENTIALS is valid JSON
-      run: |
-        echo '${{ secrets.AZURE_CREDENTIALS }}' | jq type
+    # - name: Check if AZURE_CREDENTIALS is valid JSON
+    #   run: |
+    #     echo '${{ secrets.AZURE_CREDENTIALS }}' | jq type
 
     - name: Check if Storage Account exists
       id: check_storage
