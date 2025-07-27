@@ -31,21 +31,41 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Create Resource Group
+    - name: Create Resource Group (idempotent)
       run: |
         az group create --name $AZURE_RESOURCE_GROUP --location $LOCATION
 
-    - name: Create Function App Plan
+    - name: Check if App Plan exists
+      id: check_plan
+      run: |
+        if az functionapp plan show --name $PLAN_NAME --resource-group $AZURE_RESOURCE_GROUP &> /dev/null; then
+          echo "exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "exists=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Create App Plan (if not exists)
+      if: steps.check_plan.outputs.exists == 'false'
       run: |
         az functionapp plan create \
           --name $PLAN_NAME \
           --resource-group $AZURE_RESOURCE_GROUP \
           --location $LOCATION \
           --number-of-workers 1 \
-          --sku B1 \
+          --sku F1 \
           --is-linux
 
-    - name: Create Function App
+    - name: Check if Function App exists
+      id: check_func
+      run: |
+        if az functionapp show --name $FUNCTION_APP_NAME --resource-group $AZURE_RESOURCE_GROUP &> /dev/null; then
+          echo "exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "exists=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Create Function App (if not exists)
+      if: steps.check_func.outputs.exists == 'false'
       run: |
         az functionapp create \
           --name $FUNCTION_APP_NAME \
