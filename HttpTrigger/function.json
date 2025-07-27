@@ -1,6 +1,6 @@
 {
-  "scriptFile": "../api.py",
-  "entryPoint": "app",
+  "scriptFile": "__init__.py",
+  "entryPoint": "main",
   "bindings": [
     {
       "authLevel": "anonymous",
