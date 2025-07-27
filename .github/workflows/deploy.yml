@@ -34,8 +34,8 @@ jobs:
         CLEAN_NAME=$(echo "${{ github.ref_name }}" | tr -cd '[:alnum:]' | tr '[:upper:]' '[:lower:]')
         echo "CLEAN_NAME=$CLEAN_NAME" >> $GITHUB_OUTPUT
         echo "AZURE_RESOURCE_GROUP=rg-fastapi-$CLEAN_NAME" >> $GITHUB_ENV
-        echo "FUNCTION_APP_NAME=fastapistoreneonetapi$CLEAN_NAME" >> $GITHUB_ENV
-        echo "STORAGE_ACCOUNT_NAME=fastapistoreneonetapi$CLEAN_NAME" >> $GITHUB_ENV
+        echo "FUNCTION_APP_NAME=fastapinetneo$CLEAN_NAME" >> $GITHUB_ENV
+        echo "STORAGE_ACCOUNT_NAME=fastapinetneo$CLEAN_NAME" >> $GITHUB_ENV
 
     - name: Create Resource Group (idempotent)
       run: |
