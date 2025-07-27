@@ -9,7 +9,7 @@ on:
 env:
   AZURE_RESOURCE_GROUP: rg-fastapi-${{ github.ref_name }}
   FUNCTION_APP_NAME: fastapi-func-${{ github.ref_name }}
-  LOCATION: eastus
+  LOCATION: westus2
   PYTHON_VERSION: "3.10"
   PLAN_NAME: plan-fastapi-${{ github.ref_name }}
 
@@ -35,25 +35,25 @@ jobs:
       run: |
         az group create --name $AZURE_RESOURCE_GROUP --location $LOCATION
 
-    - name: Check if App Plan exists
-      id: check_plan
-      run: |
-        if az functionapp plan show --name $PLAN_NAME --resource-group $AZURE_RESOURCE_GROUP &> /dev/null; then
-          echo "exists=true" >> $GITHUB_OUTPUT
-        else
-          echo "exists=false" >> $GITHUB_OUTPUT
-        fi
+    # - name: Check if App Plan exists
+    #   id: check_plan
+    #   run: |
+    #     if az functionapp plan show --name $PLAN_NAME --resource-group $AZURE_RESOURCE_GROUP &> /dev/null; then
+    #       echo "exists=true" >> $GITHUB_OUTPUT
+    #     else
+    #       echo "exists=false" >> $GITHUB_OUTPUT
+    #     fi
 
-    - name: Create App Plan (if not exists)
-      if: steps.check_plan.outputs.exists == 'false'
-      run: |
-        az functionapp plan create \
-          --name $PLAN_NAME \
-          --resource-group $AZURE_RESOURCE_GROUP \
-          --location $LOCATION \
-          --number-of-workers 1 \
-          --sku F1 \
-          --is-linux
+    # - name: Create App Plan (if not exists)
+    #   if: steps.check_plan.outputs.exists == 'false'
+    #   run: |
+    #     az functionapp plan create \
+    #       --name $PLAN_NAME \
+    #       --resource-group $AZURE_RESOURCE_GROUP \
+    #       --location $LOCATION \
+    #       --number-of-workers 1 \
+    #       --sku F1 \
+    #       --is-linux
 
     - name: Check if Function App exists
       id: check_func
@@ -71,7 +71,6 @@ jobs:
           --name $FUNCTION_APP_NAME \
           --storage-account $FUNCTION_APP_NAME \
           --resource-group $AZURE_RESOURCE_GROUP \
-          --plan $PLAN_NAME \
           --runtime python \
           --runtime-version $PYTHON_VERSION \
           --functions-version 4 \
