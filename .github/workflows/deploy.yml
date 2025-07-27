@@ -42,6 +42,15 @@ jobs:
         az group create \
           --name $AZURE_RESOURCE_GROUP \
           --location $LOCATION
+    
+    - name: Debug AZURE_CREDENTIALS (subscriptionId only)
+      run: |
+        echo '${{ secrets.AZURE_CREDENTIALS }}' | jq -r '.subscriptionId'
+    
+
+    - name: Check if AZURE_CREDENTIALS is valid JSON
+      run: |
+        echo '${{ secrets.AZURE_CREDENTIALS }}' | jq type
 
     - name: Check if Storage Account exists
       id: check_storage
