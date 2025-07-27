@@ -38,7 +38,7 @@ jobs:
     - name: Check if Storage Account exists
       id: check_storage
       run: |
-        if az storage account show --name $STORAGE_ACCOUNT_NAME --resource-group $AZURE_RESOURCE_GROUP &> /dev/null; then
+        if az storage account show --name $FUNCTION_APP_NAME --resource-group $AZURE_RESOURCE_GROUP &> /dev/null; then
           echo "exists=true" >> $GITHUB_OUTPUT
         else
           echo "exists=false" >> $GITHUB_OUTPUT
@@ -48,11 +48,12 @@ jobs:
       if: steps.check_storage.outputs.exists == 'false'
       run: |
         az storage account create \
-          --name $STORAGE_ACCOUNT_NAME \
-          --location $LOCATION \
+          --name $FUNCTION_APP_NAME \
           --resource-group $AZURE_RESOURCE_GROUP \
+          --location $LOCATION \
           --sku Standard_LRS \
-          --kind StorageV2
+          --kind StorageV2 \
+          --access-tier Hot
 
     - name: Check if Function App exists
       id: check_func
