@@ -1,10 +1,12 @@
-from azure.functions import AsgiFunctionApp
+import azure.functions as func
 from fastapi import FastAPI
 
 app = FastAPI()
 
-@app.get("/")
-def read_root():
-    return {"message": "Hello from FastAPI on Azure Functions"}
+@app.get("/api/hello")
+async def hello():
+    return {"message": "Hello from Azure Function"}
 
-main = AsgiFunctionApp(app)
+async def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
+    # Use AsgiMiddleware directly in the function to ensure correct path handling
+    return await func.AsgiMiddleware(app).handle_async(req, context)
